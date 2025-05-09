@@ -1,0 +1,8 @@
+site_name: App documentation
+
+theme:
+    name: readthedocs
+
+plugins:
+- search
+- mkdocstrings
