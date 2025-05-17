@@ -1,5 +1,5 @@
 from pytest import CaptureFixture
-from app import main
+from app.main import main
 
 
 def test_main(capfd: CaptureFixture[str]) -> None:
