@@ -1,6 +1,3 @@
-# Code paths
-CODE_PATHS := ''
-
 # Use the virtual environment
 export PATH := justfile_directory() + '/.venv/bin:' + env('PATH')
 
