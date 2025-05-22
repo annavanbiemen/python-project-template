@@ -31,7 +31,9 @@ class Container:
         return io.ContextualFactory(self.output(), self.writer)
 
     def record_filter(self) -> filtering.RecordFilter:
-        return filtering.RecordFilter.create(self.config.get_field_filters())
+        return filtering.FilterFactory.create_record_filter(
+            self.config.get_field_filters()
+        )
 
     def application(self) -> app.Application:
         return app.Application(
