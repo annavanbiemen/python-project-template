@@ -25,6 +25,7 @@ sh: _init
 check: _init
     ruff check --quiet
     ruff format --quiet --check
+    pyright
     pylint --score n .
     mypy --no-error-summary .
     flake8
