@@ -23,8 +23,8 @@ sh: _init
 
 # Check code
 check: _init
-    ruff check --quiet
-    ruff format --quiet --check
+    ruff check
+    ruff format --check
     pyright
     pylint --score n .
     mypy --no-error-summary .
