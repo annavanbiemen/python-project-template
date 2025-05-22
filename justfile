@@ -46,7 +46,7 @@ behave: _init
 # Scan for vulnerabilities
 scan: _init
     bandit -r src
-    safety scan
+    uv-secure
 
 # Run the app
 @run: _init
