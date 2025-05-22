@@ -1,44 +1,19 @@
-import csv
-import sys
-from typing import IO
 from collections.abc import Callable
+from typing import Generic, IO, TypeVar
 
 
-class ReaderContext:
-    def __init__(
-        self,
-        input_factory: Callable[[], IO],
-        reader_factory: Callable[[IO], csv.DictReader[str]],
-    ):
-        self.file: IO | None
-        self.input_factory = input_factory
-        self.reader_factory = reader_factory
-
-    def __enter__(self) -> csv.DictReader[str]:
-        self.file = self.input_factory()
-
-        return self.reader_factory(self.file)
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.file not in (None, sys.stdin):
-            self.file.close()
+T = TypeVar("T")
 
 
-class WriterContext:
-    def __init__(
-        self,
-        output_factory: Callable[[], IO],
-        writer_factory: Callable[[IO], csv.DictWriter[str]],
-    ):
-        self.file: IO | None
-        self.output_factory = output_factory
-        self.writer_factory = writer_factory
+class ContextualFactory(Generic[T]):
+    """Delegates context management while creating an IO-consuming service."""
 
-    def __enter__(self) -> csv.DictWriter[str]:
-        self.file = self.output_factory()
+    def __init__(self, stream: IO, factory: Callable[[IO], T]) -> None:
+        self.stream = stream
+        self.factory = factory
 
-        return self.writer_factory(self.file)
+    def __enter__(self) -> T:
+        return self.factory(self.stream.__enter__())
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.file not in (None, sys.stdout):
-            self.file.close()
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.stream.__exit__(exc_type, exc_val, exc_tb)

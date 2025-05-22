@@ -1,11 +1,12 @@
+from csv import DictReader, DictWriter
 from . import filtering, io
 
 
 class Application:
     def __init__(
         self,
-        reader_context: io.ReaderContext,
-        writer_context: io.WriterContext,
+        reader_context: io.ContextualFactory[DictReader[str]],
+        writer_context: io.ContextualFactory[DictWriter[str]],
         record_filter: filtering.RecordFilter,
     ):
         self.reader_context = reader_context
