@@ -22,7 +22,6 @@ build-backend = "uv_build"
 dev = [
     "bandit>=1.8.3",
     "behave>=1.2.6",
-    "black>=25.1.0",
     "flake8>=7.2.0",
     "flake8-pyproject>=1.2.3",
     "mkdocs>=1.6.1",
@@ -41,9 +40,6 @@ pythonpath = "src"
 testpaths = ["tests"]
 
 [tool.behave]
-
-[tool.black]
-line-length = 79
 
 [tool.pylint]
 disable = [

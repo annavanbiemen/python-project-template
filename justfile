@@ -28,13 +28,11 @@ check: _init
     pylint --score n .
     mypy --no-error-summary .
     flake8
-    black --quiet --check .
 
 # Fix code
 fix: _init
     ruff check --fix
     ruff format
-    black .
 
 # Test for bugs
 test: _init
