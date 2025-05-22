@@ -9,7 +9,9 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "uv-build>=0.7.6",
+]
 
 [project.scripts]
 app = "app.main:main"
