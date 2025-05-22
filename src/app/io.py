@@ -20,7 +20,7 @@ class ReaderContext:
         return self.reader_factory(self.file)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.file is not sys.stdin:
+        if self.file not in (None, sys.stdin):
             self.file.close()
 
 
@@ -40,5 +40,5 @@ class WriterContext:
         return self.writer_factory(self.file)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.file is not sys.stdout:
+        if self.file not in (None, sys.stdout):
             self.file.close()
