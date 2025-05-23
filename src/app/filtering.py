@@ -52,15 +52,23 @@ class FilterFactory:
         )
 
 
+def register_filter(name):
+    def decorator(cls):
+        FilterFactory.register(name, cls)
+        return cls
+
+    return decorator
+
+
+@register_filter("upper")
 class UpperFilter(Filter):
     def filter(self, value: str) -> str:
         return value.upper()
 
 
+@register_filter("lower")
 class LowerFilter(Filter):
+    """Returns lowercased value."""
+
     def filter(self, value: str) -> str:
         return value.lower()
-
-
-FilterFactory.register("upper", UpperFilter)
-FilterFactory.register("lower", LowerFilter)
