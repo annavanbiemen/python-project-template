@@ -1,6 +1,5 @@
 from runpy import run_module
 from pytest import CaptureFixture
-from runpy import run_module
 from app.main import main
 
 
