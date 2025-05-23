@@ -37,8 +37,8 @@ dev = [
     "uv-secure>=0.9.1",
 ]
 
-[tool.pytest]
-addopts = "--cov=src"
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-branch --cov-fail-under=100"
 pythonpath = "src"
 testpaths = ["tests"]
 
