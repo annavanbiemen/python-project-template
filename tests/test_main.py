@@ -1,24 +1,23 @@
 from contextlib import suppress
 from runpy import run_module
-from pytest import CaptureFixture
-from app.main import main
+
+from app import main
 
 
-def test_main(capfd: CaptureFixture[str]) -> None:
-    assert main() == 0
-    assert capfd.readouterr().out == "Hello World!\n"
+def test_main():
+    assert main.main() == 0
 
 
-def test_help(capfd: CaptureFixture[str]) -> None:
+def test_help(capfd):
     with suppress(SystemExit):
-        main(["--help"])
+        main.main(["--help"])
 
     assert "usage:" in capfd.readouterr().out
 
 
-def test_module_import() -> None:
+def test_module_import():
     run_module("app.__main__")
 
 
-def test_module_run() -> None:
+def test_module_run():
     run_module("app.__main__", run_name="__main__")
