@@ -32,7 +32,7 @@ check: _init
 
 # Fix code
 fix: _init
-    ruff check --fix
+    ruff check --fix-only
     ruff format
 
 # Test for bugs
