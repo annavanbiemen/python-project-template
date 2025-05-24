@@ -1,3 +1,4 @@
+from contextlib import suppress
 from runpy import run_module
 from pytest import CaptureFixture
 from app.main import main
@@ -9,10 +10,8 @@ def test_main(capfd: CaptureFixture[str]) -> None:
 
 
 def test_help(capfd: CaptureFixture[str]) -> None:
-    try:
+    with suppress(SystemExit):
         main(["--help"])
-    except SystemExit:
-        pass
 
     assert "usage:" in capfd.readouterr().out
 
