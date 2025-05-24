@@ -17,4 +17,4 @@ wheels/
 /site
 
 # pytest
-/.coverage
+.coverage
