@@ -24,12 +24,8 @@ build-backend = "uv_build"
 dev = [
     "bandit>=1.8.3",
     "behave>=1.2.6",
-    "flake8>=7.2.0",
-    "flake8-pyproject>=1.2.3",
     "mkdocs>=1.6.1",
     "mkdocstrings[python]>=0.29.1",
-    "mypy>=1.15.0",
-    "pylint>=3.3.7",
     "pyright>=1.1.401",
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
@@ -60,14 +56,3 @@ pythonpath = "src"
 testpaths = ["tests"]
 
 [tool.behave]
-
-[tool.pylint]
-disable = [
-    'C0114', # missing-module-docstring
-    'C0115', # missing-class-docstring
-    'C0116', # missing-function-docstring
-]
-ignore = ['.git', '.venv']
-
-[tool.flake8]
-exclude = ['git', '.venv']

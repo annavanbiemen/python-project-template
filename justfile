@@ -26,9 +26,6 @@ check: _init
     ruff check
     ruff format --check
     pyright
-    pylint --score n .
-    mypy --no-error-summary .
-    flake8
 
 # Fix code
 fix: _init
