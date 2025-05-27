@@ -4,16 +4,23 @@ from typing import ClassVar
 
 
 class Filter(ABC):
+    """Abstract filter base class."""
+
     @abstractmethod
     def filter(self, value: str) -> str:
+        """Filter value."""
         raise NotImplementedError
 
 
 class RecordFilter:
+    """Record filter."""
+
     def __init__(self, filters: dict[str, tuple[Filter, ...]]) -> None:
+        """Initialize record filter."""
         self.filters = filters
 
     def filter(self, record: dict[str, str]) -> dict[str, str]:
+        """Filter record."""
         result = {}
         for field, filters in self.filters.items():
             value = record[field]
@@ -26,6 +33,8 @@ class RecordFilter:
 
 
 class FilterFactory:
+    """Filter factory for creating filters by their registered name."""
+
     _filters: ClassVar[dict[str, type[Filter]]] = {}
 
     @classmethod
@@ -47,6 +56,7 @@ class FilterFactory:
     def create_record_filter(
         cls, field_filters: dict[str, tuple[str, ...]]
     ) -> RecordFilter:
+        """Create a record filter using a dict of field names and filters."""
         return RecordFilter(
             {
                 field: tuple(cls.create(name) for name in filters)
@@ -56,6 +66,8 @@ class FilterFactory:
 
 
 def register_filter(name: str) -> Callable[[type[Filter]], type[Filter]]:
+    """Register a named filter with the filter factory."""
+
     def decorator(cls: type[Filter]) -> type[Filter]:
         FilterFactory.register(name, cls)
         return cls
@@ -65,13 +77,17 @@ def register_filter(name: str) -> Callable[[type[Filter]], type[Filter]]:
 
 @register_filter("upper")
 class UpperFilter(Filter):
+    """Upper filter."""
+
     def filter(self, value: str) -> str:
+        """Apply upper filter."""
         return value.upper()
 
 
 @register_filter("lower")
 class LowerFilter(Filter):
-    """Returns lowercased value."""
+    """Lower filter."""
 
     def filter(self, value: str) -> str:
+        """Apply lower filter."""
         return value.lower()

@@ -9,10 +9,12 @@ class ContextualFactory(Generic[T]):
     """Delegates context management while creating an IO-consuming service."""
 
     def __init__(self, stream: IO, factory: Callable[[IO], T]) -> None:
+        """Initialize contextual factory."""
         self.stream = stream
         self.factory = factory
 
     def __enter__(self) -> T:
+        """Delegate entering context and create service."""
         return self.factory(self.stream.__enter__())
 
     def __exit__(
@@ -21,6 +23,7 @@ class ContextualFactory(Generic[T]):
         exception_value: BaseException | None,
         exception_traceback: TracebackType | None,
     ) -> None:
+        """Delegate exiting context."""
         self.stream.__exit__(
             exception_type,
             exception_value,

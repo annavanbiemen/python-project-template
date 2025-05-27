@@ -4,6 +4,7 @@ from . import config, di
 
 
 def main(args: list[str] | None = None) -> int:
+    """CSVFilter Main function."""
     configuration = config.Configuration()
 
     parser = argparse.ArgumentParser("app")
