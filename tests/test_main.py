@@ -1,14 +1,14 @@
+import contextlib
 from runpy import run_module
-from pytest import CaptureFixture
-from runpy import run_module
+
+import pytest
+
 from app.main import main
 
 
-def test_help(capfd: CaptureFixture[str]) -> None:
-    try:
+def test_help(capfd: pytest.CaptureFixture[str]) -> None:
+    with contextlib.suppress(SystemExit):
         main(["--help"])
-    except SystemExit:
-        pass
 
     assert "usage:" in capfd.readouterr().out
 

@@ -1,6 +1,6 @@
 from collections.abc import Callable
-from typing import Generic, IO, TypeVar
-
+from types import TracebackType
+from typing import IO, Generic, TypeVar
 
 T = TypeVar("T")
 
@@ -15,5 +15,14 @@ class ContextualFactory(Generic[T]):
     def __enter__(self) -> T:
         return self.factory(self.stream.__enter__())
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
-        self.stream.__exit__(exc_type, exc_val, exc_tb)
+    def __exit__(
+        self,
+        exception_type: type[BaseException] | None,
+        exception_value: BaseException | None,
+        exception_traceback: TracebackType | None,
+    ) -> None:
+        self.stream.__exit__(
+            exception_type,
+            exception_value,
+            exception_traceback,
+        )

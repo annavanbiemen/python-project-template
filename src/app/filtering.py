@@ -1,4 +1,6 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from collections.abc import Callable
+from typing import ClassVar
 
 
 class Filter(ABC):
@@ -8,7 +10,7 @@ class Filter(ABC):
 
 
 class RecordFilter:
-    def __init__(self, filters: dict[str, tuple[Filter, ...]]):
+    def __init__(self, filters: dict[str, tuple[Filter, ...]]) -> None:
         self.filters = filters
 
     def filter(self, record: dict[str, str]) -> dict[str, str]:
@@ -24,7 +26,7 @@ class RecordFilter:
 
 
 class FilterFactory:
-    _filters: dict[str, type[Filter]] = {}
+    _filters: ClassVar[dict[str, type[Filter]]] = {}
 
     @classmethod
     def register(cls, name: str, filter_class: type[Filter]) -> None:
@@ -36,7 +38,8 @@ class FilterFactory:
         """Create a filter instance by name."""
         filter_class = cls._filters.get(name)
         if filter_class is None:
-            raise ValueError(f"Filter '{name}' is unknown.")
+            msg = f"Filter '{name}' is unknown."
+            raise ValueError(msg)
 
         return filter_class()
 
@@ -52,8 +55,8 @@ class FilterFactory:
         )
 
 
-def register_filter(name):
-    def decorator(cls):
+def register_filter(name: str) -> Callable[[type[Filter]], type[Filter]]:
+    def decorator(cls: type[Filter]) -> type[Filter]:
         FilterFactory.register(name, cls)
         return cls
 

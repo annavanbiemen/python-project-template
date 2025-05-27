@@ -1,6 +1,8 @@
 from csv import DictReader, DictWriter
+from pathlib import Path
 from sys import stdin, stdout
 from typing import IO
+
 from . import app, config, filtering, io
 
 
@@ -11,7 +13,7 @@ class Container:
     def input(self) -> IO:
         if self.config.input is None:
             return stdin
-        return open(self.config.input, "r", encoding="utf-8-sig")
+        return Path(self.config.input).open(encoding="utf-8-sig")
 
     def reader(self, file: IO) -> DictReader[str]:
         return DictReader(file, delimiter=";")
@@ -22,7 +24,7 @@ class Container:
     def output(self) -> IO:
         if self.config.output is None:
             return stdout
-        return open(self.config.output, "w", encoding="utf-8-sig")
+        return Path(self.config.output).open("w", encoding="utf-8-sig")
 
     def writer(self, file: IO) -> DictWriter[str]:
         return DictWriter(file, fieldnames=self.config.get_field_names())
