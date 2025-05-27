@@ -1,30 +1,30 @@
-import dataclasses
-import os
+from dataclasses import dataclass, field
+from os import getenv
 
 
-@dataclasses.dataclass
+@dataclass
 class Configuration:
     """Configuration settings."""
 
-    input: str | None = os.getenv("CSVFILTER_INPUT")
-    output: str | None = os.getenv("CSVFILTER_OUTPUT")
-    fields: list[str] = dataclasses.field(
+    input: str | None = getenv("CSVFILTER_INPUT")
+    output: str | None = getenv("CSVFILTER_OUTPUT")
+    fields: list[str] = field(
         default_factory=lambda: list(
             filter(
                 len,
-                os.getenv("CSVFILTER_FIELDS", "").split(","),
+                getenv("CSVFILTER_FIELDS", "").split(","),
             )
         )
     )
     """Fields as a list of strings in 'field.filter1.filter2' format."""
 
     def get_field_names(self) -> tuple[str, ...]:
-        """Get list of field name strings."""
-        return tuple(field.split(".")[0] for field in self.fields)
+        """Get a list of field name strings."""
+        return tuple(parts.split(".")[0] for parts in self.fields)
 
     def get_field_filters(self) -> dict[str, tuple[str, ...]]:
-        """Get dictionary of field name, filter name tuples."""
+        """Get a dictionary of field names with filter name tuples."""
         return {
-            field[0]: tuple(field[1:])
-            for field in (field.split(".") for field in self.fields)
+            part[0]: tuple(part[1:])
+            for part in (parts.split(".") for parts in self.fields)
         }
