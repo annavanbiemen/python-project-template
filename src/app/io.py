@@ -1,6 +1,7 @@
 from collections.abc import Callable
+from contextlib import AbstractContextManager
 from types import TracebackType
-from typing import IO, Generic, TypeVar
+from typing import Generic, TextIO, TypeVar
 
 T = TypeVar("T")
 
@@ -8,7 +9,11 @@ T = TypeVar("T")
 class ContextualFactory(Generic[T]):
     """Delegates context management while creating an IO-consuming service."""
 
-    def __init__(self, stream: IO, factory: Callable[[IO], T]) -> None:
+    def __init__(
+        self,
+        stream: AbstractContextManager[TextIO],
+        factory: Callable[[TextIO], T],
+    ) -> None:
         """Initialize contextual factory."""
         self.stream = stream
         self.factory = factory

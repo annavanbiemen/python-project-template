@@ -1,7 +1,8 @@
+from contextlib import AbstractContextManager, nullcontext
 from csv import DictReader, DictWriter
 from pathlib import Path
 from sys import stdin, stdout
-from typing import IO
+from typing import TextIO
 
 from . import app, config, filtering, io
 
@@ -13,28 +14,34 @@ class Container:
         """Initialize container."""
         self.config = configuration
 
-    def input(self) -> IO:
-        """Create IO input stream from input file (or return sys.stdin)."""
+    def input(self) -> AbstractContextManager[TextIO]:
+        """Create IO input stream."""
         if self.config.input is None:
-            return stdin
+            # noinspection PyTypeChecker
+            return nullcontext(stdin)
+
         return Path(self.config.input).open(encoding="utf-8-sig")
 
-    def reader(self, file: IO) -> DictReader[str]:
-        """Create reader from opened file."""
+    # noinspection PyMethodMayBeStatic
+    def reader(self, file: TextIO) -> DictReader[str]:
+        """Create reader from an opened file."""
         return DictReader(file, delimiter=";")
 
     def reader_context(self) -> io.ContextualFactory[DictReader[str]]:
         """Create contextual factory with opened file and reader factory."""
         return io.ContextualFactory(self.input(), self.reader)
 
-    def output(self) -> IO:
+    def output(self) -> AbstractContextManager[TextIO]:
         """Create IO output stream from output file (or return sys.stdout)."""
         if self.config.output is None:
-            return stdout
+            # noinspection PyTypeChecker
+            return nullcontext(stdout)
+
         return Path(self.config.output).open("w", encoding="utf-8-sig")
 
-    def writer(self, file: IO) -> DictWriter[str]:
-        """Create writer from opened file."""
+    def writer(self, file: TextIO) -> DictWriter[str]:
+        """Create writer from an opened file."""
+        # noinspection PyTypeChecker
         return DictWriter(file, fieldnames=self.config.get_field_names())
 
     def writer_context(self) -> io.ContextualFactory[DictWriter[str]]:
