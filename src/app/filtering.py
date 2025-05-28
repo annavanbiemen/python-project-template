@@ -7,7 +7,7 @@ class Filter(ABC):
     """Abstract filter base class."""
 
     @abstractmethod
-    def filter(self, value: str) -> str:
+    def filter(self, value: str) -> str:  # pragma: no cover
         """Filter value."""
         raise NotImplementedError
 
