@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Mapping
 from typing import ClassVar
 
 
@@ -12,24 +12,34 @@ class Filter(ABC):
         raise NotImplementedError
 
 
+class ValueFilter(Filter):
+    """Value filter."""
+
+    def __init__(self, filters: Iterable[Filter]) -> None:
+        """Initialize value filter."""
+        self.filters = filters
+
+    def filter(self, value: str) -> str:
+        """Filter value."""
+        for filter_instance in self.filters:
+            value = filter_instance.filter(value)
+
+        return value
+
+
 class RecordFilter:
     """Record filter."""
 
-    def __init__(self, filters: dict[str, tuple[Filter, ...]]) -> None:
+    def __init__(self, filters: dict[str, ValueFilter]) -> None:
         """Initialize record filter."""
         self.filters = filters
 
     def filter(self, record: dict[str, str]) -> dict[str, str]:
         """Filter record."""
-        result = {}
-        for field, filters in self.filters.items():
-            value = record[field]
-            for filter_instance in filters:
-                value = filter_instance.filter(value)
-
-            result[field] = value
-
-        return result
+        return {
+            field: value_filter.filter(record[field])
+            for field, value_filter in self.filters.items()
+        }
 
 
 class FilterFactory:
@@ -53,14 +63,19 @@ class FilterFactory:
         return filter_class()
 
     @classmethod
+    def create_value_filter(cls, names: Iterable[str]) -> ValueFilter:
+        """Create a filter instance by name."""
+        return ValueFilter([cls.create(name) for name in names])
+
+    @classmethod
     def create_record_filter(
-        cls, field_filters: dict[str, tuple[str, ...]]
+        cls, field_filters: Mapping[str, Iterable[str]]
     ) -> RecordFilter:
-        """Create a record filter using a dict of field names and filters."""
+        """Create a record filter using a mapping of field names to filters."""
         return RecordFilter(
             {
-                field: tuple(cls.create(name) for name in filters)
-                for field, filters in field_filters.items()
+                field: cls.create_value_filter(names)
+                for field, names in field_filters.items()
             }
         )
 

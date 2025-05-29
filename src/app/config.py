@@ -18,13 +18,12 @@ class Configuration:
     )
     """Fields as a list of strings in 'field.filter1.filter2' format."""
 
-    def get_field_names(self) -> tuple[str, ...]:
+    def get_field_names(self) -> list[str]:
         """Get a list of field name strings."""
-        return tuple(parts.split(".")[0] for parts in self.fields)
+        return [parts.split(".")[0] for parts in self.fields]
 
-    def get_field_filters(self) -> dict[str, tuple[str, ...]]:
+    def get_field_filters(self) -> dict[str, list[str]]:
         """Get a dictionary of field names with filter name tuples."""
         return {
-            part[0]: tuple(part[1:])
-            for part in (parts.split(".") for parts in self.fields)
+            part[0]: part[1:] for part in (parts.split(".") for parts in self.fields)
         }

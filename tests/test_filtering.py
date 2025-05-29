@@ -6,6 +6,7 @@ from app.filtering import (
     LowerFilter,
     RecordFilter,
     UpperFilter,
+    ValueFilter,
     register_filter,
 )
 
@@ -29,18 +30,21 @@ def test_create_unknown_filter() -> None:
 def test_create_record_filter() -> None:
     record_filter = FilterFactory.create_record_filter(
         {
-            "a": (),
-            "b": ("test",),
+            "foo": (),
+            "bar": ("test",),
         }
     )
 
-    assert len(record_filter.filters["a"]) == 0
-    assert len(record_filter.filters["b"]) == 1
-    assert isinstance(record_filter.filters["b"][0], TestFilter)
+    foo_filters = list(record_filter.filters["foo"].filters)
+    bar_filters = list(record_filter.filters["bar"].filters)
+
+    assert len(foo_filters) == 0
+    assert len(bar_filters) == 1
+    assert isinstance(bar_filters[0], TestFilter)
 
 
 def test_record_filter() -> None:
-    record_filter = RecordFilter({"field": (TestFilter(), TestFilter())})
+    record_filter = RecordFilter({"field": ValueFilter([TestFilter(), TestFilter()])})
     filtered = record_filter.filter({"field": "value"})
     assert filtered == {"field": "value.."}
 
