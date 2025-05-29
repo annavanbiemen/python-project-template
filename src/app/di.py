@@ -25,7 +25,7 @@ class Container:
     # noinspection PyMethodMayBeStatic
     def reader(self, file: TextIO) -> DictReader[str]:
         """Create reader from an opened file."""
-        return DictReader(file, delimiter=";")
+        return DictReader(file)
 
     def reader_context(self) -> io.ContextualFactory[DictReader[str]]:
         """Create contextual factory with opened file and reader factory."""
